@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinning Wheel App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="wheel-container">
+                <div class="wheel-frame"></div>
+                <div class="wheel" id="wheel">
+                    <!-- Wheel sections will be created dynamically -->
+                </div>
+                <img src="wheel.png" id="wheelImage" class="wheel-custom-image" alt="Custom wheel">
+                <div class="wheel-center"></div>
+                <div class="wheel-pointer"></div>
+            </div>
+        </div>
+
+        <div class="settings" id="settings">
+            <div class="settings-content">
+                <h2>Wheel Settings</h2>
+                
+                <div class="settings-group">
+                    <h3>Number of Sections</h3>
+                    <div class="section-count-controls">
+                        <button id="decreaseSections">-</button>
+                        <span class="section-count" id="sectionCount">6</span>
+                        <button id="increaseSections">+</button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Section Text</h3>
+                    <div class="section-text-inputs" id="sectionTextInputs">
+                        <!-- Inputs will be generated based on section count -->
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Colors</h3>
+                    <div class="colors-settings">
+                        <div class="color-picker">
+                            <label for="color1">Color 1</label>
+                            <input type="color" id="color1" value="#e74c3c">
+                        </div>
+                        <div class="color-picker">
+                            <label for="color2">Color 2</label>
+                            <input type="color" id="color2" value="#3498db">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="apply-settings" id="applySettings">Apply Settings</button>
+                <div class="keyboard-help">
+                    <p>Press <b>Space</b> to spin the wheel</p>
+                    <p>Press <b>Control</b> to toggle settings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-modal" id="resultModal">
+        <div class="modal-content">
+            <h2>The wheel has stopped!</h2>
+            <p>You landed on:</p>
+            <div class="result-text" id="resultText">Section 1</div>
+            <button class="primary-btn close-modal" id="closeModal">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let wheelState = {
+            sectionCount: 6,
+            sectionTexts: ['Section 1', 'Section 2', 'Section 3', 'Section 4', 'Section 5', 'Section 6'],
+            colors: ['#e74c3c', '#3498db'],
+            isSpinning: false,
+            currentRotation: 0
+        };
+
+        // DOM Elements
+        const wheel = document.getElementById('wheel');
+        const wheelImage = document.getElementById('wheelImage');
+        const settings = document.getElementById('settings');
+        const sectionCount = document.getElementById('sectionCount');
+        const increaseSections = document.getElementById('increaseSections');
+        const decreaseSections = document.getElementById('decreaseSections');
+        const sectionTextInputs = document.getElementById('sectionTextInputs');
+        const color1Input = document.getElementById('color1');
+        const color2Input = document.getElementById('color2');
+        const applySettings = document.getElementById('applySettings');
+        const resultModal = document.getElementById('resultModal');
+        const resultText = document.getElementById('resultText');
+        const closeModal = document.getElementById('closeModal');
+
+        // Initialize wheel
+        createWheel();
+        updateSectionInputs();
+
+        // Event Listeners
+        document.addEventListener('keydown', handleKeyPress);
+        increaseSections.addEventListener('click', () => changeSectionCount(1));
+        decreaseSections.addEventListener('click', () => changeSectionCount(-1));
+        applySettings.addEventListener('click', applyWheelSettings);
+        closeModal.addEventListener('click', () => resultModal.classList.remove('visible'));
+
+        // Handle keyboard shortcuts
+        function handleKeyPress(event) {
+            if (event.code === 'Space') {
+                // Space key to spin
+                event.preventDefault(); // Prevent scrolling with spacebar
+                spinWheel();
+            } else if (event.ctrlKey) {
+                // Control key to toggle settings
+                event.preventDefault(); // Prevent default control behavior
+                toggleSettings();
+            }
+        }
+
+        /* Calculate result after spinning */
+        function calculateResult(totalRotation) {
+            const sectionAngle = 360 / wheelState.sectionCount;
+            
+            // Normalize rotation to 0-360 range
+            const normalizedRotation = (totalRotation % 360 + 360) % 360;
+            
+            // When the wheel rotates clockwise, the section positions are reversed
+            // We need to invert the angle for correct section calculation
+            const invertedAngle = (360 - normalizedRotation) % 360;
+            
+            // Find which section contains this angle
+            const sectionIndex = Math.floor(invertedAngle / sectionAngle);
+            
+            // Handle edge case for full rotation
+            return sectionIndex < wheelState.sectionCount ? sectionIndex : 0;
+        }
+
+        // Functions
+        function createWheel() {
+            // Clear existing sections
+            wheel.innerHTML = '';
+            
+            const sectionAngle = 360 / wheelState.sectionCount;
+            
+            // Draw each section
+            for (let i = 0; i < wheelState.sectionCount; i++) {
+                // Calculate the angles for this section
+                const startAngleDeg = i * sectionAngle;
+                const endAngleDeg = (i + 1) * sectionAngle;
+                
+                // Convert to radians for calculations
+                const startAngle = (startAngleDeg) * (Math.PI/180);
+                const endAngle = (endAngleDeg) * (Math.PI/180);
+                
+                // Create the wheel section
+                const section = document.createElement('div');
+                section.className = 'wheel-section';
+                
+                // Set color (alternate between the two colors)
+                const colorIndex = i % 2;
+                section.style.backgroundColor = wheelState.colors[colorIndex];
+                
+                // Create curved pie slice using multiple points along the arc
+                let clipPath = "polygon(50% 50%";
+                
+                // Add multiple points along the arc for a smoother curve
+                const pointCount = 10; // Number of points on the arc (more = smoother)
+                for (let p = 0; p <= pointCount; p++) {
+                    const pointAngle = startAngle + (endAngle - startAngle) * (p / pointCount);
+                    const px = 50 + 50 * Math.sin(pointAngle);
+                    const py = 50 - 50 * Math.cos(pointAngle);
+                    clipPath += `, ${px}% ${py}%`;
+                }
+                
+                clipPath += ")";
+                section.style.clipPath = clipPath;
+                
+                wheel.appendChild(section);
+                
+                // Add the text label
+                const textElement = document.createElement('div');
+                textElement.className = 'section-text';
+                textElement.textContent = wheelState.sectionTexts[i] || `Section ${i + 1}`;
+                
+                // Calculate text position - in the middle of the section
+                const textAngleDeg = startAngleDeg + (sectionAngle / 2); // Middle of the section
+                const textRadians = textAngleDeg * (Math.PI / 180);
+                const textRadius = 250; // Distance from center - increased for larger wheel
+                
+                // Calculate x and y positions precisely
+                const textX = Math.sin(textRadians) * textRadius + 300; // 300 is half of wheel size
+                const textY = -Math.cos(textRadians) * textRadius + 300;
+                
+                // Position text
+                textElement.style.left = `${textX - 40}px`; // 40 is half of text width
+                textElement.style.top = `${textY - 10}px`; // 10 is half of text height
+                textElement.style.transform = `rotate(${textAngleDeg}deg)`; // Rotate text to be readable
+                
+                wheel.appendChild(textElement);
+            }
+
+            // Reset wheel position
+            wheel.style.transform = `rotate(${wheelState.currentRotation}deg)`;
+            // Don't rotate the wheel image
+        }
+
+        function updateSectionInputs() {
+            sectionTextInputs.innerHTML = '';
+            
+            for (let i = 0; i < wheelState.sectionCount; i++) {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'input-group';
+                
+                const label = document.createElement('label');
+                label.textContent = `Section ${i + 1}`;
+                label.setAttribute('for', `section-${i}`);
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `section-${i}`;
+                input.value = wheelState.sectionTexts[i] || `Section ${i + 1}`;
+                
+                inputGroup.appendChild(label);
+                inputGroup.appendChild(input);
+                sectionTextInputs.appendChild(inputGroup);
+            }
+        }
+
+        function changeSectionCount(change) {
+            let newCount = wheelState.sectionCount + change;
+            
+            // Limit to 4-8 sections
+            newCount = Math.max(4, Math.min(8, newCount));
+            
+            if (newCount !== wheelState.sectionCount) {
+                wheelState.sectionCount = newCount;
+                sectionCount.textContent = newCount;
+                
+                // Adjust section texts array
+                if (change > 0) {
+                    // Add new sections
+                    for (let i = wheelState.sectionTexts.length; i < newCount; i++) {
+                        wheelState.sectionTexts.push(`Section ${i + 1}`);
+                    }
+                } else {
+                    // Remove excess sections
+                    wheelState.sectionTexts = wheelState.sectionTexts.slice(0, newCount);
+                }
+                
+                updateSectionInputs();
+            }
+        }
+
+        function applyWheelSettings() {
+            // Update section texts from inputs
+            for (let i = 0; i < wheelState.sectionCount; i++) {
+                const input = document.getElementById(`section-${i}`);
+                if (input) {
+                    wheelState.sectionTexts[i] = input.value || `Section ${i + 1}`;
+                }
+            }
+            
+            // Update colors
+            wheelState.colors[0] = color1Input.value;
+            wheelState.colors[1] = color2Input.value;
+            
+            // Recreate wheel with new settings
+            createWheel();
+            
+            // Hide settings
+            settings.classList.remove('visible');
+        }
+
+        function spinWheel() {
+            if (wheelState.isSpinning) return;
+            
+            wheelState.isSpinning = true;
+            
+            // Random rotation between 2 and 5 full spins + random final position
+            const spinAngle = 720 + Math.floor(Math.random() * 1440);
+            const totalRotation = wheelState.currentRotation + spinAngle;
+            
+            wheel.style.transform = `rotate(${totalRotation}deg)`;
+            // Don't rotate the wheel image
+            wheelState.currentRotation = totalRotation;
+            
+            // Show result after spin completes
+            setTimeout(() => {
+                // Calculate which section is selected
+                const sectionIndex = calculateResult(totalRotation);
+                
+                // Show result
+                resultText.textContent = wheelState.sectionTexts[sectionIndex];
+                resultModal.classList.add('visible');
+                
+                // Reset spinning state
+                wheelState.isSpinning = false;
+            }, 3000);
+        }
+
+        function toggleSettings() {
+            settings.classList.toggle('visible');
+        }
+    </script>
+</body>
+</html>
