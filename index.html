@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <audio id="spinSound" src="spin.mp3" preload="auto"></audio>
+    <audio id="winSound" src="win.mp3" preload="auto"></audio>
+
+
     <div class="container">
         <div class="content">
             <div class="wheel-container">
@@ -28,31 +32,31 @@
 
         <div class="settings" id="settings">
             <div class="settings-content">
-                <h2>Wheel Settings</h2>
+                <h2>Ayarlar</h2>
                 
                 <div class="settings-group">
-                    <h3>Background</h3>
+                    <h3>Arkaplan</h3>
                     <div class="background-settings">
                         <div class="background-color-section">
-                            <label for="bgColor">Background Color</label>
+                            <label for="bgColor">Arkaplan Rengi</label>
                             <input type="color" id="bgColor" value="#f5f5f5">
                         </div>
                         
                         <div class="background-image-section">
-                            <h4>Background Image</h4>
+                            <h4>Arkaplan Resmi</h4>
                             <div class="image-preview" id="bgImagePreview"></div>
                             
                             <div class="image-upload-container">
                                 <input type="file" id="bgImage" accept="image/png" style="display: none;">
-                                <button id="uploadBgImage" class="upload-image-btn">Add Background Image</button>
-                                <button id="clearBgImage" class="clear-image-btn" style="display: none;">Clear</button>
+                                <button id="uploadBgImage" class="upload-image-btn">Arkaplan Resmi Ekle</button>
+                                <button id="clearBgImage" class="clear-image-btn" style="display: none;">Sil</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings-group">
-                    <h3>Number of Sections</h3>
+                    <h3>Bölme Sayısı</h3>
                     <div class="section-count-controls">
                         <button id="decreaseSections">-</button>
                         <span class="section-count" id="sectionCount">6</span>
@@ -61,18 +65,18 @@
                 </div>
 
                 <div class="settings-group">
-                    <h3>Logos</h3>
+                    <h3>Logolar</h3>
                     <div class="logos-settings">
                         <!-- Top Logo Settings -->
                         <div class="logo-setting">
-                            <h4>Top Logo</h4>
+                            <h4>Üst Logo</h4>
                             <div class="text-input-container">
                                 <input type="text" id="topLogoText" class="logo-text-input" placeholder="Text for top logo">
-                                <button id="clearTopLogoText" class="clear-text-btn">Clear</button>
+                                <button id="clearTopLogoText" class="clear-text-btn">Yazıyı Sil</button>
                             </div>
                             
                             <div class="logo-color-picker">
-                                <label for="topLogoColor">Logo Color</label>
+                                <label for="topLogoColor">Logo Rengi</label>
                                 <input type="color" id="topLogoColor" value="#333333">
                             </div>
                             
@@ -80,21 +84,21 @@
                             
                             <div class="image-upload-container">
                                 <input type="file" id="topLogoImage" accept="image/png" style="display: none;">
-                                <button id="uploadTopLogo" class="upload-image-btn">Add Image</button>
-                                <button id="clearTopLogo" class="clear-image-btn" style="display: none;">Clear</button>
+                                <button id="uploadTopLogo" class="upload-image-btn">Resim Ekle</button>
+                                <button id="clearTopLogo" class="clear-image-btn" style="display: none;">Sil</button>
                             </div>
                         </div>
                         
                         <!-- Bottom Logo Settings -->
                         <div class="logo-setting">
-                            <h4>Bottom Logo</h4>
+                            <h4>Alt Logo</h4>
                             <div class="text-input-container">
                                 <input type="text" id="bottomLogoText" class="logo-text-input" placeholder="Text for bottom logo">
-                                <button id="clearBottomLogoText" class="clear-text-btn">Clear</button>
+                                <button id="clearBottomLogoText" class="clear-text-btn">Yazıyı Sil</button>
                             </div>
                             
                             <div class="logo-color-picker">
-                                <label for="bottomLogoColor">Logo Color</label>
+                                <label for="bottomLogoColor">Logo Rengi</label>
                                 <input type="color" id="bottomLogoColor" value="#333333">
                             </div>
                             
@@ -102,38 +106,38 @@
                             
                             <div class="image-upload-container">
                                 <input type="file" id="bottomLogoImage" accept="image/png" style="display: none;">
-                                <button id="uploadBottomLogo" class="upload-image-btn">Add Image</button>
-                                <button id="clearBottomLogo" class="clear-image-btn" style="display: none;">Clear</button>
+                                <button id="uploadBottomLogo" class="upload-image-btn">Resim Ekle</button>
+                                <button id="clearBottomLogo" class="clear-image-btn" style="display: none;">Sil</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings-group">
-                    <h3>Section Text & Images</h3>
+                    <h3>Bölme Yazı ve Resimleri</h3>
                     <div class="section-text-inputs" id="sectionTextInputs">
                         <!-- Inputs will be generated based on section count -->
                     </div>
                 </div>
 
                 <div class="settings-group">
-                    <h3>Colors</h3>
+                    <h3>Renkler</h3>
                     <div class="colors-settings">
                         <div class="color-picker">
-                            <label for="color1">Color 1</label>
+                            <label for="color1">Renk 1</label>
                             <input type="color" id="color1" value="#e74c3c">
                         </div>
                         <div class="color-picker">
-                            <label for="color2">Color 2</label>
+                            <label for="color2">Renk 2</label>
                             <input type="color" id="color2" value="#3498db">
                         </div>
                     </div>
                 </div>
 
-                <button class="apply-settings" id="applySettings">Apply Settings</button>
+                <button class="apply-settings" id="applySettings">Ayarları Uygula</button>
                 <div class="keyboard-help">
-                    <p>Press <b>Space</b> to spin the wheel</p>
-                    <p>Press <b>Control</b> to toggle settings</p>
+                    <p>Çarkı çevirmek için <b>Boşluk</b> tuşuna bas</p>
+                    <p>Ayarlara girip çıkmak için <b>Control</b> tuşuna bas</p>
                 </div>
             </div>
         </div>
@@ -142,7 +146,7 @@
     <div class="result-modal" id="resultModal">
         <div class="modal-content">
             <div class="timer-container" id="timerDisplay">4</div>
-            <div class="result-text" id="resultText">Section 1</div>
+            <div class="result-text" id="resultText">Bölme 1</div>
             <div class="result-image-container" id="resultImageContainer"></div>
             <button class="primary-btn close-modal" id="closeModal">OK</button>
         </div>
@@ -152,7 +156,7 @@
         // State
         let wheelState = {
             sectionCount: 6,
-            sectionTexts: ['Section 1', 'Section 2', 'Section 3', 'Section 4', 'Section 5', 'Section 6'],
+            sectionTexts: ['Bölme 1', 'Bölme 2', 'Bölme 3', 'Bölme 4', 'Bölme 5', 'Bölme 6'],
             sectionImages: Array(6).fill(null), // Array to store image data URLs
             colors: ['#e74c3c', '#3498db'],
             isSpinning: false,
@@ -189,6 +193,9 @@
         const closeModal = document.getElementById('closeModal');
         const topLogo = document.getElementById('topLogo');
         const bottomLogo = document.getElementById('bottomLogo');
+        const spinSound = document.getElementById('spinSound');
+        const winSound = document.getElementById('winSound');
+
         
         // Logo settings elements
         const topLogoText = document.getElementById('topLogoText');
@@ -255,7 +262,7 @@
             e.preventDefault();
             wheelState.topLogo.image = null;
             topLogoPreview.innerHTML = '';
-            uploadTopLogo.textContent = 'Add Image';
+            uploadTopLogo.textContent = 'Resim Ekle';
             clearTopLogo.style.display = 'none';
             updateLogos();
         });
@@ -264,7 +271,7 @@
             e.preventDefault();
             wheelState.bottomLogo.image = null;
             bottomLogoPreview.innerHTML = '';
-            uploadBottomLogo.textContent = 'Add Image';
+            uploadBottomLogo.textContent = 'Resim Ekle';
             clearBottomLogo.style.display = 'none';
             updateLogos();
         });
@@ -286,7 +293,7 @@
             e.preventDefault();
             wheelState.background.image = null;
             bgImagePreview.innerHTML = '';
-            uploadBgImage.textContent = 'Add Background Image';
+            uploadBgImage.textContent = 'Arkaplan Resmi Ekle';
             clearBgImage.style.display = 'none';
             applyBackgroundSettings();
         });
@@ -300,7 +307,7 @@
                 const img = document.createElement('img');
                 img.src = wheelState.background.image;
                 bgImagePreview.appendChild(img);
-                uploadBgImage.textContent = 'Change Image';
+                uploadBgImage.textContent = 'Resim Değiştir';
                 clearBgImage.style.display = 'inline-block';
             }
             
@@ -322,7 +329,7 @@
                     bgImagePreview.appendChild(img);
                     
                     // Update button texts
-                    uploadBgImage.textContent = 'Change Image';
+                    uploadBgImage.textContent = 'Resim Değiştir';
                     clearBgImage.style.display = 'inline-block';
                     
                     // Apply background settings
@@ -392,7 +399,7 @@
                 const img = document.createElement('img');
                 img.src = wheelState.topLogo.image;
                 topLogoPreview.appendChild(img);
-                uploadTopLogo.textContent = 'Change Image';
+                uploadTopLogo.textContent = 'Resim Değiştir';
                 clearTopLogo.style.display = 'inline-block';
             }
             
@@ -400,7 +407,7 @@
                 const img = document.createElement('img');
                 img.src = wheelState.bottomLogo.image;
                 bottomLogoPreview.appendChild(img);
-                uploadBottomLogo.textContent = 'Change Image';
+                uploadBottomLogo.textContent = 'Resim Değiştir';
                 clearBottomLogo.style.display = 'inline-block';
             }
         }
@@ -420,7 +427,7 @@
                     topLogoPreview.appendChild(img);
                     
                     // Update button texts
-                    uploadTopLogo.textContent = 'Change Image';
+                    uploadTopLogo.textContent = 'Resim Değiştir';
                     clearTopLogo.style.display = 'inline-block';
                     
                     // Update logo display
@@ -444,7 +451,7 @@
                     bottomLogoPreview.appendChild(img);
                     
                     // Update button texts
-                    uploadBottomLogo.textContent = 'Change Image';
+                    uploadBottomLogo.textContent = 'Resim Değiştir';
                     clearBottomLogo.style.display = 'inline-block';
                     
                     // Update logo display
@@ -499,6 +506,9 @@
         function createWheel() {
             // Clear existing sections
             wheel.innerHTML = '';
+            
+            // Reset the transition to default (needed after changing it during spinning)
+            wheel.style.transition = `transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)`;
             
             const sectionAngle = 360 / wheelState.sectionCount;
             
@@ -602,21 +612,21 @@
                 
                 // Section label
                 const label = document.createElement('label');
-                label.textContent = `Section ${i + 1}`;
-                label.setAttribute('for', `section-${i}`);
+                label.textContent = `Bölme ${i + 1}`;
+                label.setAttribute('for', `Bölme-${i}`);
                 
                 // Text input
                 const input = document.createElement('input');
                 input.type = 'text';
-                input.id = `section-${i}`;
-                input.className = 'section-text-input';
+                input.id = `bölme-${i}`;
+                input.className = 'bölme-text-input';
                 input.value = wheelState.sectionTexts[i] || '';
-                input.placeholder = `Section ${i + 1}`;
+                input.placeholder = `Bölme ${i + 1}`;
                 
                 // Clear text button
                 const clearTextBtn = document.createElement('button');
                 clearTextBtn.className = 'clear-text-btn';
-                clearTextBtn.textContent = 'Clear Text';
+                clearTextBtn.textContent = 'Yazıyı Sil';
                 clearTextBtn.onclick = function(e) {
                     e.preventDefault();
                     input.value = '';
@@ -634,22 +644,22 @@
                 if (wheelState.sectionImages[i]) {
                     const img = document.createElement('img');
                     img.src = wheelState.sectionImages[i];
-                    img.alt = `Section ${i+1} image`;
+                    img.alt = `Bölme ${i+1} image`;
                     imagePreview.appendChild(img);
                 }
                 
                 // File input
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
-                fileInput.id = `section-image-${i}`;
-                fileInput.className = 'section-image-input';
+                fileInput.id = `bölme-image-${i}`;
+                fileInput.className = 'bölme-image-input';
                 fileInput.accept = 'image/png';
                 fileInput.style.display = 'none';
                 
                 // Upload button
                 const uploadButton = document.createElement('button');
                 uploadButton.className = 'upload-image-btn';
-                uploadButton.textContent = wheelState.sectionImages[i] ? 'Change Image' : 'Add Image';
+                uploadButton.textContent = wheelState.sectionImages[i] ? 'Resim Değiştir' : 'Resim Ekle';
                 uploadButton.onclick = function(e) {
                     e.preventDefault();
                     fileInput.click();
@@ -658,13 +668,13 @@
                 // Clear button (only show if image exists)
                 const clearButton = document.createElement('button');
                 clearButton.className = 'clear-image-btn';
-                clearButton.textContent = 'Clear';
+                clearButton.textContent = 'Sil';
                 clearButton.style.display = wheelState.sectionImages[i] ? 'inline-block' : 'none';
                 clearButton.onclick = function(e) {
                     e.preventDefault();
                     wheelState.sectionImages[i] = null;
                     imagePreview.innerHTML = '';
-                    uploadButton.textContent = 'Add Image';
+                    uploadButton.textContent = 'Resim Ekle';
                     clearButton.style.display = 'none';
                 };
                 
@@ -681,11 +691,11 @@
                             imagePreview.innerHTML = '';
                             const img = document.createElement('img');
                             img.src = e.target.result;
-                            img.alt = `Section ${i+1} image`;
+                            img.alt = `Bölme ${i+1} image`;
                             imagePreview.appendChild(img);
                             
                             // Update button texts
-                            uploadButton.textContent = 'Change Image';
+                            uploadButton.textContent = 'Resim Değiştir';
                             clearButton.style.display = 'inline-block';
                         };
                         reader.readAsDataURL(file);
@@ -728,7 +738,7 @@
                 if (change > 0) {
                     // Add new sections
                     for (let i = wheelState.sectionTexts.length; i < newCount; i++) {
-                        wheelState.sectionTexts.push(`Section ${i + 1}`);
+                        wheelState.sectionTexts.push(`Bölme ${i + 1}`);
                         wheelState.sectionImages.push(null);
                     }
                 } else {
@@ -744,7 +754,7 @@
         function applyWheelSettings() {
             // Update section texts from inputs
             for (let i = 0; i < wheelState.sectionCount; i++) {
-                const input = document.getElementById(`section-${i}`);
+                const input = document.getElementById(`bölme-${i}`);
                 if (input) {
                     wheelState.sectionTexts[i] = input.value;
                 }
@@ -776,16 +786,29 @@
             
             wheelState.isSpinning = true;
             
-            // Random rotation between 2 and 5 full spins + random final position
-            const spinAngle = 720 + Math.floor(Math.random() * 1440);
+            // Generate random spin duration between 5 and 8 seconds
+            const spinDuration = 6 + Math.random() * 2; // Random duration between 5-8 seconds
+            
+            // Set a longer transition duration for the wheel
+            wheel.style.transition = `transform ${spinDuration}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
+            
+            // Random rotation between 5 and 10 full spins
+            const spinAngle = 3600 + Math.floor(Math.random() * 1800); // 10-15 full rotations (3600-5400 degrees)
             const totalRotation = wheelState.currentRotation + spinAngle;
             
+            // Play the spinning sound
+            spinSound.currentTime = 0; // Reset the audio to the beginning
+            spinSound.play();
+            
+            // Start spinning the wheel
             wheel.style.transform = `rotate(${totalRotation}deg)`;
-            // Don't rotate the wheel image
             wheelState.currentRotation = totalRotation;
             
             // Show result after spin completes
             setTimeout(() => {
+                winSound.currentTime = 0; // Reset win sound to beginning
+                winSound.play();
+
                 // Calculate which section is selected
                 const sectionIndex = calculateResult(totalRotation);
                 const resultImageContainer = document.getElementById('resultImageContainer');
@@ -800,7 +823,7 @@
                     // Add the image
                     const img = document.createElement('img');
                     img.src = wheelState.sectionImages[sectionIndex];
-                    img.alt = `Section ${sectionIndex + 1} image`;
+                    img.alt = `Bölme ${sectionIndex + 1} image`;
                     resultImageContainer.appendChild(img);
                     
                     // Add "Kazandınız" text after the image
@@ -832,7 +855,7 @@
                     resultImageContainer.appendChild(winText);
                 } else {
                     // Show generic result if no text and no image
-                    resultText.textContent = `Section ${sectionIndex + 1}`;
+                    resultText.textContent = `Bölme ${sectionIndex + 1}`;
                 }
                 
                 // Show the modal with timer
@@ -859,7 +882,7 @@
                     resultModal.classList.remove('visible');
                     wheelState.isSpinning = false;
                 };
-            }, 3000);
+            }, spinDuration * 1000); // Convert seconds to milliseconds
         }
 
         function toggleSettings() {
